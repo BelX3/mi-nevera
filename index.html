@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mi nevera v8</title>
+<style>
+:root{--paper:#fffaf1;--bg:#eee8db;--ink:#243047;--muted:#7b7469;--line:#ded4c4;--blue:#263b9a;--blue2:#e9efff;--ok:#1f7a4d;--warn:#a35b00;--bad:#a93434;--shadow:0 18px 45px rgba(37,31,22,.10)}
+*{box-sizing:border-box}body{margin:0;font-family:ui-rounded,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(135deg,#eee8db,#faf7ef 45%,#ece4d7);color:var(--ink)}
+button,input,select{font:inherit}.app{max-width:1120px;margin:auto;padding:16px 12px 44px}.sheet{background:var(--paper);border:1px solid #ebe2d6;border-radius:34px;box-shadow:var(--shadow);padding:20px;min-height:86vh;position:relative;overflow:hidden}.sheet:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 20% 15%,rgba(38,59,154,.07),transparent 22rem),radial-gradient(circle at 90% 0,rgba(255,202,92,.18),transparent 18rem);pointer-events:none}.content{position:relative}
+header{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:start}.brand{font-family:"Comic Sans MS","Segoe Print",ui-rounded,sans-serif;font-size:clamp(30px,6.5vw,56px);letter-spacing:.02em;color:var(--blue)}.question{font-family:"Comic Sans MS","Segoe Print",ui-rounded,sans-serif;font-size:clamp(20px,3.5vw,33px);color:var(--blue);text-align:right}.account{margin-top:8px;display:flex;gap:8px;justify-content:flex-end;align-items:center;flex-wrap:wrap}.account input{max-width:230px;border:1px solid var(--line);border-radius:14px;background:white;padding:10px 12px}.smallbtn{border:0;border-radius:13px;background:#eef1f8;color:var(--ink);padding:10px 12px;cursor:pointer}.smallbtn.primary{background:var(--blue);color:white}.smallbtn.danger{background:#ffe7e7;color:var(--bad)}.smallbtn:disabled{opacity:.55;cursor:not-allowed}.accountName{font-size:13px;color:var(--muted);width:100%;text-align:right}.accountName.simple{margin-top:8px}
+.hero{display:grid;grid-template-columns:.9fr 1.3fr;gap:18px;align-items:stretch;margin:22px 0}.percentCard,.goalCard{background:rgba(255,255,255,.62);border:1px solid var(--line);border-radius:28px;padding:18px}.percent{text-align:center;font-size:clamp(58px,12vw,105px);font-weight:850;letter-spacing:-.08em;color:var(--ink);line-height:1}.percent small{font-size:.34em;letter-spacing:0;color:var(--muted);margin-left:4px}.caption{text-align:center;color:var(--muted);font-size:14px;margin-top:8px}.goalCard h2,.panel h2,form h2{font-family:"Comic Sans MS","Segoe Print",ui-rounded,sans-serif;color:var(--blue);font-size:26px;margin:0 0 12px}.goalBox{background:white;border:1px solid var(--line);border-radius:20px;padding:14px}.goalTop{display:flex;justify-content:space-between;gap:8px;align-items:center}.goalTitle{font-weight:850}.goalValue{font-size:24px;font-weight:900;color:var(--blue)}.bar{height:14px;background:#ebe4d9;border-radius:999px;overflow:hidden;margin-top:11px}.fill{height:100%;background:var(--blue);border-radius:999px}.goalForm{display:grid;grid-template-columns:1fr .8fr .8fr auto;gap:8px;margin-top:12px;align-items:end}.goalForm label{font-size:13px;color:var(--muted);display:grid;gap:5px}.goalForm input,.goalForm select{border:1px solid var(--line);border-radius:13px;background:white;padding:10px 12px;min-width:0}.note{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.35}.toast{margin-top:10px;color:var(--ok);font-weight:700;min-height:20px}
+.consumeBox{background:rgba(255,255,255,.62);border:1px dashed #cfc5b7;border-radius:24px;padding:14px;margin:18px 0}.consumeGrid{display:grid;grid-template-columns:1fr auto;gap:10px}.consumeGrid label{font-size:13px;color:var(--muted);display:grid;gap:5px}.consumeGrid input{border:1px solid var(--line);border-radius:13px;background:white;padding:12px;font-size:16px}.consumeBtn{border:0;border-radius:20px;background:linear-gradient(135deg,var(--blue),#5168d8);color:white;padding:10px 18px;min-height:62px;cursor:pointer;display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:10px;align-items:center;box-shadow:0 12px 24px rgba(38,59,154,.22);transition:transform .15s ease,box-shadow .15s ease}.consumeBtn span{font-size:28px;grid-row:1/3}.consumeBtn strong{font-size:16px;line-height:1.1;text-align:left}.consumeBtn small{font-size:12px;opacity:.85;text-align:left}.consumeBtn:hover{transform:translateY(-1px);box-shadow:0 16px 30px rgba(38,59,154,.28)}.consumeBtn:active{transform:translateY(1px);box-shadow:0 8px 16px rgba(38,59,154,.20)}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0 24px}.pill{border:2px solid var(--blue);background:#fffaf1;color:var(--blue);border-radius:999px;padding:17px 16px;min-height:58px;font-size:clamp(18px,2.8vw,27px);font-family:"Comic Sans MS","Segoe Print",ui-rounded,sans-serif;cursor:pointer}.pill.active{background:var(--blue);color:white}.main{display:grid;grid-template-columns:1fr 1fr;gap:24px}.list{display:grid;gap:12px}.item{background:rgba(255,255,255,.72);border:1px solid var(--line);border-radius:20px;padding:14px;display:grid;gap:8px}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.name{font-weight:800;font-size:18px}.meta{font-size:14px;color:var(--muted)}.badge{font-size:13px;border-radius:999px;padding:6px 9px;background:var(--blue2);color:var(--blue);white-space:nowrap}.badge.bad{background:#ffe7e7;color:var(--bad)}.badge.warn{background:#fff0d6;color:var(--warn)}.actions{display:flex;gap:8px;flex-wrap:wrap}.actions button{border:0;border-radius:12px;background:#eef1f8;color:var(--ink);padding:9px 11px;cursor:pointer}.actions button.eatMini{background:#fff0d6;color:#7a4300;font-weight:800}
+form{background:rgba(255,255,255,.62);border:1px dashed #cfc5b7;border-radius:24px;padding:14px;margin-top:18px}.formGrid{display:grid;grid-template-columns:1.4fr .75fr .75fr .8fr .9fr;gap:9px}.formGrid label{font-size:13px;color:var(--muted);display:grid;gap:5px}.formGrid input,.formGrid select{width:100%;border:1px solid var(--line);border-radius:13px;background:white;padding:11px 12px;color:var(--ink)}.wide{grid-column:1/-1}.empty{color:var(--muted);padding:18px;border:1px dashed var(--line);border-radius:18px;background:rgba(255,255,255,.45)}.tools{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;margin-top:10px}.tools button{border:1px solid var(--line);background:white;border-radius:14px;padding:10px 12px;color:var(--ink);cursor:pointer}.history{margin-top:18px}.history details{background:rgba(255,255,255,.55);border:1px solid var(--line);border-radius:20px;padding:12px}.history summary{cursor:pointer;font-weight:800;color:var(--blue)}.historyList{margin-top:10px;display:grid;gap:8px;font-size:14px;color:var(--muted)}.histCompra{color:var(--ok);font-weight:800}.histConsumo{color:var(--bad);font-weight:800}.histCambio{color:var(--blue);font-weight:800}
+.authHint{margin:18px 0;background:rgba(255,255,255,.62);border:1px dashed #cfc5b7;border-radius:24px;padding:18px;text-align:center;color:var(--muted)}
+.authHint strong{color:var(--blue)}
+.authMsg{font-size:13px;color:var(--muted);width:100%;text-align:right;min-height:18px}.authMsg.ok{color:var(--ok)}.authMsg.bad{color:var(--bad)}
+#loggedInAuth strong{max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:800px){.sheet{padding:16px;border-radius:26px}header,.hero,.main{grid-template-columns:1fr}.question,.accountName,.authMsg{text-align:left}.account{justify-content:flex-start}.goalForm{grid-template-columns:1fr}.tabs{gap:10px}.pill{font-size:20px;padding:14px 12px}.formGrid{grid-template-columns:1fr 1fr}.formGrid label:first-child,.wide{grid-column:1/-1}.consumeGrid{grid-template-columns:1fr}.tools{justify-content:flex-start}}
+</style>
+</head>
+<body>
+<main class="app"><section class="sheet"><div class="content">
+<header>
+  <div class="brand">Mi nevera</div>
+  <div>
+    <div class="question">¿Qué has consumido?</div>
+    <div class="account" id="loggedOutAuth">
+      <input id="authEmail" type="email" autocomplete="email" placeholder="Tu email">
+      <input id="authPassword" type="password" autocomplete="current-password" minlength="6" placeholder="Contraseña (mín. 6)">
+      <button class="smallbtn" id="signupBtn" type="button">Crear cuenta</button>
+      <button class="smallbtn primary" id="signinBtn" type="button">Iniciar sesión</button>
+      <div class="authMsg" id="authMsg"></div>
+    </div>
+    <div class="account" id="loggedInAuth" hidden>
+      <strong id="userEmail"></strong>
+      <button class="smallbtn danger" id="signoutBtn" type="button">Cerrar sesión</button>
+    </div>
+    <div class="accountName simple" id="saveNote">Inicia sesión para guardar tu nevera online</div>
+  </div>
+</header>
+
+<div class="authHint" id="loginHint"><strong>Tu nevera ahora puede guardarse online.</strong><br>Crea una cuenta o inicia sesión arriba para ver y guardar tus productos desde cualquier dispositivo.</div>
+
+<div id="privateApp" hidden>
+<section class="hero">
+  <div class="percentCard">
+    <div class="percent"><span id="globalPercent">0</span><small>%</small></div>
+    <div class="caption" id="percentCaption">De tu 100% ideal disponible</div>
+  </div>
+  <div class="goalCard">
+    <h2>¿Cuál es tu 100%?</h2>
+    <div class="goalBox">
+      <div class="goalTop">
+        <div>
+          <div class="goalTitle" id="goalNameText">Mi nevera ideal</div>
+          <div class="meta"><span id="availableText">0</span> de <span id="goalText">21</span> <span id="goalUnitText">raciones</span></div>
+        </div>
+        <div class="goalValue"><span id="goalPct">0</span>%</div>
+      </div>
+      <div class="bar"><div class="fill" id="goalFill"></div></div>
+    </div>
+    <div class="goalForm">
+      <label>Nombre del 100%<input id="goalName" value="Mi nevera ideal"></label>
+      <label>Cantidad objetivo<input id="goalAmount" type="number" min="1" step="1" value="21"></label>
+      <label>Unidad<select id="goalUnit"><option>raciones</option><option>comidas</option><option>días</option><option>bandejas</option><option>unidades</option></select></label>
+      <button id="saveGoal" class="smallbtn primary" type="button">Guardar 100%</button>
+    </div>
+    <div class="note">Aquí decides qué significa para ti estar al 100%. Ejemplo: 21 raciones si quieres tener comida para 7 días y 3 comidas al día.</div>
+  </div>
+</section>
+
+<div class="consumeBox">
+  <div class="consumeGrid">
+    <label>Apunta lo que te has comido o gastado
+      <input id="consumeText" placeholder="Ej: 1 bandeja de pollo">
+    </label>
+    <button class="consumeBtn" id="consumeBtn" type="button"><span>🍽️</span><strong>Ya me lo he comido</strong><small>Guardar y restar</small></button>
+  </div>
+  <div class="note">Esto se guarda en el historial junto con las compras. Si un producto llega a 0, desaparece de “En la nevera” y se queda en “Para comprar”.</div>
+  <div class="toast" id="toast"></div>
+</div>
+
+<div class="tabs"><button class="pill active" id="tabBuy" type="button">Para comprar</button><button class="pill" id="tabFridge" type="button">En la nevera</button></div>
+<div class="main">
+  <section class="panel" id="buyPanel"><h2>Para comprar</h2><div class="list" id="shoppingList"></div></section>
+  <section class="panel" id="fridgePanel"><h2>En la nevera</h2><div class="list" id="fridgeList"></div></section>
+</div>
+
+<form id="addForm"><h2>Añadir compra / alimento</h2><div class="formGrid">
+  <label>Producto<input id="name" required placeholder="Tomate, pollo, pan..."></label>
+  <label>Cantidad inicial<input id="initial" required type="number" min="0.01" step="0.01" value="1"></label>
+  <label>Cantidad actual<input id="current" required type="number" min="0" step="0.01" value="1"></label>
+  <label>Unidad<select id="unit"><option>ud</option><option>g</option><option>kg</option><option>ml</option><option>L</option><option>bandejas</option><option>rebanadas</option></select></label>
+  <label>Categoría<select id="category"><option>Nevera</option><option>Congelador</option><option>Despensa</option></select></label>
+  <label>Caducidad<input id="expiry" type="date"></label>
+  <label>Avisar al %<input id="threshold" type="number" min="1" max="100" value="30"></label>
+  <label>Aporta a tu 100%<input id="portionValue" type="number" min="0" step="0.5" value="1"></label>
+  <div class="wide actions"><button class="smallbtn primary" type="submit">Guardar compra</button></div>
+</div></form>
+
+<div class="history"><details open><summary>Historial de compras y consumos</summary><div class="historyList" id="historyList"></div></details></div>
+<div class="tools">
+  <button id="exportBtn" type="button">Exportar copia</button>
+  <button id="importBtn" type="button">Importar copia</button>
+  <button id="clearBtn" type="button">Borrar datos</button>
+  <input id="fileInput" type="file" accept="application/json" hidden>
+</div>
+</div>
+</div></section></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const SUPABASE_URL='https://klrrsajryvwjqhffyzvk.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_vubLU1yO01pL_xOwGBs53A_BZfNvrjK';
+const supa=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+
+const defaultState=()=>({goal:{name:'Mi nevera ideal',amount:21,unit:'raciones'},items:[],history:[]});
+let state=defaultState();
+let currentUser=null;
+let saveQueue=Promise.resolve();
+let loadingRemote=false;
+
+function cleanState(value){
+ const out=(value&&typeof value==='object')?value:defaultState();
+ if(!out.goal) out.goal={name:'Mi nevera ideal',amount:21,unit:'raciones'};
+ if(!Array.isArray(out.items)) out.items=[];
+ if(!Array.isArray(out.history)) out.history=[];
+ return out;
+}
+function cacheKey(){return currentUser?`nevera_v8_cache_${currentUser.id}`:'nevera_v5_local';}
+function today(){return new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});}
+function authMessage(text='',kind=''){const el=$('authMsg'); el.textContent=text; el.className='authMsg'+(kind?' '+kind:'');}
+function setAuthBusy(busy){$('signupBtn').disabled=busy;$('signinBtn').disabled=busy;$('authEmail').disabled=busy;$('authPassword').disabled=busy;}
+function hasUsefulLocalData(v){if(!v||typeof v!=='object')return false; const items=Array.isArray(v.items)?v.items.length:0; const hist=Array.isArray(v.history)?v.history.length:0; const g=v.goal||{}; return items>0||hist>0||g.name!=='Mi nevera ideal'||Number(g.amount)!==21||g.unit!=='raciones';}
+
+function save(){
+ if(!currentUser||loadingRemote)return;
+ const snapshot=JSON.parse(JSON.stringify(state));
+ try{localStorage.setItem(cacheKey(),JSON.stringify(snapshot));}catch(e){}
+ const userId=currentUser.id;
+ $('saveNote').textContent='Guardando online…';
+ saveQueue=saveQueue.then(async()=>{
+   const {error}=await supa.from('app_state').upsert({user_id:userId,state:snapshot,updated_at:new Date().toISOString()},{onConflict:'user_id'});
+   if(error)throw error;
+   if(currentUser&&currentUser.id===userId)$('saveNote').textContent='Guardado online ✓';
+ }).catch(err=>{console.error(err); if(currentUser&&currentUser.id===userId)$('saveNote').textContent='No se pudo guardar · revisa tu conexión';});
+}
+
+async function loadRemoteForUser(user){
+ loadingRemote=true;
+ $('saveNote').textContent='Cargando tu nevera…';
+ const {data,error}=await supa.from('app_state').select('state').eq('user_id',user.id).maybeSingle();
+ if(error){loadingRemote=false; throw error;}
+ if(data&&data.state){
+   state=cleanState(data.state);
+ }else{
+   let candidate=null;
+   try{candidate=JSON.parse(localStorage.getItem(`nevera_v8_cache_${user.id}`)||'null');}catch(e){}
+   if(!candidate){
+     try{
+       const legacy=JSON.parse(localStorage.getItem('nevera_v5_local')||'null');
+       if(hasUsefulLocalData(legacy)&&confirm('He encontrado datos de la versión anterior guardados en este navegador. ¿Quieres subirlos a tu cuenta?')) candidate=legacy;
+     }catch(e){}
+   }
+   state=cleanState(candidate||defaultState());
+   const {error:createError}=await supa.from('app_state').upsert({user_id:user.id,state,updated_at:new Date().toISOString()},{onConflict:'user_id'});
+   if(createError){loadingRemote=false; throw createError;}
+ }
+ loadingRemote=false;
+ render();
+}
+
+async function applySession(session){
+ currentUser=session?.user||null;
+ if(currentUser){
+   $('loggedOutAuth').hidden=true; $('loggedInAuth').hidden=false; $('privateApp').hidden=false; $('loginHint').hidden=true;
+   $('userEmail').textContent=currentUser.email||'Cuenta iniciada'; authMessage('');
+   try{await loadRemoteForUser(currentUser);}catch(err){console.error(err);$('saveNote').textContent='Error al cargar tus datos';authMessage('No se pudo cargar tu nevera. Revisa la conexión o la configuración de Supabase.','bad');}
+ }else{
+   $('loggedOutAuth').hidden=false; $('loggedInAuth').hidden=true; $('privateApp').hidden=true; $('loginHint').hidden=false; $('userEmail').textContent='';
+   $('saveNote').textContent='Inicia sesión para guardar tu nevera online';
+   state=defaultState();
+ }
+}
+
+function log(type,text){state.history.unshift({type,text,date:today()});state.history=state.history.slice(0,120);}
+function pct(item){return item.initial>0?Math.max(0,Math.min(100,Math.round((item.current/item.initial)*100))):0}
+function totalAvailable(){return state.items.reduce((sum,it)=>sum+(Number(it.portionValue||0)*(it.initial>0?it.current/it.initial:0)),0)}
+function render(){
+ $('goalName').value=state.goal.name; $('goalAmount').value=state.goal.amount; $('goalUnit').value=state.goal.unit;
+ const available=totalAvailable(); const goal=Number(state.goal.amount)||1; const gp=Math.min(999,Math.round((available/goal)*100));
+ $('globalPercent').textContent=gp; $('goalPct').textContent=gp; $('availableText').textContent=(Math.round(available*10)/10).toString().replace('.',','); $('goalText').textContent=goal; $('goalUnitText').textContent=state.goal.unit; $('goalNameText').textContent=state.goal.name; $('goalFill').style.width=Math.min(100,gp)+'%'; $('percentCaption').textContent=`De tu 100% ideal disponible`;
+ const fridge=$('fridgeList'); const shop=$('shoppingList'); fridge.innerHTML=''; shop.innerHTML='';
+ const shopping=[]; let visibleFridge=0;
+ state.items.forEach((it,i)=>{const p=pct(it); if(p<=Number(it.threshold||30)) shopping.push({it,i,p});
+ if(Number(it.current)>0){
+  visibleFridge++;
+  const div=document.createElement('div'); div.className='item'; div.innerHTML=`<div class="row"><div><div class="name">${escapeHtml(it.name)}</div><div class="meta">${it.current} de ${it.initial} ${it.unit} · ${it.category}${it.expiry?' · caduca '+it.expiry:''}</div><div class="meta">Aporta al 100%: ${it.portionValue||0} ${state.goal.unit}</div></div><span class="badge ${p<=20?'bad':p<=Number(it.threshold||30)?'warn':''}">${p}%</span></div><div class="bar"><div class="fill" style="width:${p}%"></div></div><div class="actions"><button class="eatMini" data-act="finish" data-i="${i}">🍽️ Ya consumido</button><button data-act="minus" data-i="${i}">-1</button><button data-act="plus" data-i="${i}">+1</button><button data-act="full" data-i="${i}">Comprado</button><button data-act="del" data-i="${i}">Borrar</button></div>`; fridge.appendChild(div);
+ }
+ });
+ if(!visibleFridge) fridge.innerHTML='<div class="empty">No queda nada visible en la nevera. Lo terminado sigue en “Para comprar”.</div>';
+ if(!shopping.length) shop.innerHTML='<div class="empty">No hay nada urgente para comprar.</div>'; else shopping.forEach(({it,i,p})=>{const div=document.createElement('div'); div.className='item'; div.innerHTML=`<div class="row"><div><div class="name">Comprar ${escapeHtml(it.name)}</div><div class="meta">${Number(it.current)<=0?'Ya no queda':`Queda ${it.current} ${it.unit}`} (${p}%)</div></div><span class="badge ${p<=20?'bad':'warn'}">${Number(it.current)<=0?'terminado':'falta'}</span></div><div class="actions"><button data-act="full" data-i="${i}">Ya comprado</button></div>`; shop.appendChild(div);});
+ const h=$('historyList'); h.innerHTML=''; if(!state.history.length) h.innerHTML='<div class="empty">Aún no hay historial.</div>'; else state.history.forEach(ev=>{const d=document.createElement('div'); const cls=ev.type==='compra'?'histCompra':ev.type==='consumo'?'histConsumo':'histCambio'; d.innerHTML=`<span class="${cls}">${ev.type.toUpperCase()}</span> · ${escapeHtml(ev.text)} <span class="meta">(${ev.date})</span>`; h.appendChild(d);});
+ save();
+}
+function escapeHtml(s){return String(s||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+function normalizeText(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9ñ ]/g,' ').replace(/\s+/g,' ').trim();}
+function productCandidatesFromText(text){
+ const raw=normalizeText(text); if(!raw)return [];
+ const withoutNumber=raw.replace(/^\d+(?:[.,]\d+)?\s*/,'').trim();
+ const cleaned=withoutNumber.replace(/^(una|un|la|el|los|las)\s+/,'').replace(/^(bandeja|paquete|bolsa|lata|brick|botella|tarro|caja|pieza|unidad|racion|raciones|kg|kilo|kilos|g|gramos|litro|litros|l)\s+(de\s+)?/,'').trim();
+ const afterDe=cleaned.includes(' de ')?cleaned.split(' de ').pop().trim():cleaned;
+ return Array.from(new Set([raw,withoutNumber,cleaned,afterDe].filter(Boolean)));
+}
+function findItem(text){const options=productCandidatesFromText(text); if(!options.length)return -1; return state.items.findIndex(it=>Number(it.current)>0&&options.includes(normalizeText(it.name)));}
+function numberIn(text){const m=String(text).replace(',','.').match(/(\d+(?:\.\d+)?)/); return m?Number(m[1]):null;}
+
+$('saveGoal').addEventListener('click',()=>{state.goal={name:$('goalName').value.trim()||'Mi nevera ideal',amount:Math.max(1,Number($('goalAmount').value)||21),unit:$('goalUnit').value}; log('cambio',`Nuevo 100%: ${state.goal.amount} ${state.goal.unit} (${state.goal.name})`); render();});
+$('consumeBtn').addEventListener('click',()=>{
+ const txt=$('consumeText').value.trim(); if(!txt)return; const i=findItem(txt);
+ if(i>=0){const n=numberIn(txt); if(n===null){state.items[i].current=0;log('consumo',`${state.items[i].name} consumido por completo · pasa a Para comprar`);$('toast').textContent=`${state.items[i].name} quitado de la nevera y mantenido en Para comprar.`;} else {state.items[i].current=Math.max(0,Number((state.items[i].current-n).toFixed(2)));log('consumo',`${txt} · restado de ${state.items[i].name}${state.items[i].current===0?' · pasa a Para comprar':''}`);$('toast').textContent=state.items[i].current===0?`${state.items[i].name} terminado y añadido a Para comprar.`:'Consumo guardado y restado.';}}
+ else {$('toast').textContent='No existe ese nombre exacto en “En la nevera”, así que no he cambiado nada.';}
+ $('consumeText').value=''; render();
+});
+$('addForm').addEventListener('submit',e=>{e.preventDefault(); const name=$('name').value.trim(); if(!name)return; const existing=state.items.findIndex(it=>it.name.toLowerCase()===name.toLowerCase()); const item={name,initial:Number($('initial').value)||1,current:Number($('current').value)||0,unit:$('unit').value,category:$('category').value,expiry:$('expiry').value,threshold:Number($('threshold').value)||30,portionValue:Number($('portionValue').value)||0}; if(existing>=0){state.items[existing]=item;log('compra',`Actualizado ${name}: ${item.current} ${item.unit}`)}else{state.items.push(item);log('compra',`Comprado ${name}: ${item.current} ${item.unit}`)} e.target.reset(); $('initial').value=1;$('current').value=1;$('threshold').value=30;$('portionValue').value=1;render();});
+document.addEventListener('click',e=>{const b=e.target.closest('button[data-act]'); if(!b)return; const i=Number(b.dataset.i),it=state.items[i]; if(!it)return; if(b.dataset.act==='finish'){it.current=0;log('consumo',`${it.name} consumido por completo · pasa a Para comprar`)} if(b.dataset.act==='minus'){it.current=Math.max(0,Number((it.current-1).toFixed(2)));log('consumo',`-1 ${it.unit} de ${it.name}${it.current===0?' · pasa a Para comprar':''}`)} if(b.dataset.act==='plus'){it.current=Number((it.current+1).toFixed(2));log('compra',`+1 ${it.unit} de ${it.name}`)} if(b.dataset.act==='full'){it.current=it.initial;log('compra',`${it.name} repuesto al 100%`)} if(b.dataset.act==='del'){log('cambio',`${it.name} borrado`);state.items.splice(i,1)} render();});
+$('tabBuy').addEventListener('click',()=>{$('tabBuy').classList.add('active');$('tabFridge').classList.remove('active');$('buyPanel').style.display='block';$('fridgePanel').style.display=innerWidth<801?'none':'block';});
+$('tabFridge').addEventListener('click',()=>{$('tabFridge').classList.add('active');$('tabBuy').classList.remove('active');$('fridgePanel').style.display='block';$('buyPanel').style.display=innerWidth<801?'none':'block';});
+$('exportBtn').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='copia-mi-nevera.json'; a.click(); URL.revokeObjectURL(a.href);});
+$('importBtn').addEventListener('click',()=>$('fileInput').click());
+$('fileInput').addEventListener('change',e=>{const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>{try{state=cleanState(JSON.parse(r.result));log('cambio','Copia importada');render()}catch(err){alert('No se pudo importar la copia')}}; r.readAsText(f);});
+$('clearBtn').addEventListener('click',()=>{if(confirm('¿Borrar todos los datos de tu nevera? Este cambio también se guardará online.')){state=defaultState();render();}});
+
+$('signupBtn').addEventListener('click',async()=>{
+ const email=$('authEmail').value.trim(); const password=$('authPassword').value;
+ if(!email||password.length<6){authMessage('Escribe un email válido y una contraseña de al menos 6 caracteres.','bad');return;}
+ setAuthBusy(true); authMessage('Creando cuenta…');
+ const {data,error}=await supa.auth.signUp({email,password});
+ setAuthBusy(false);
+ if(error){authMessage(error.message,'bad');return;}
+ if(data.session){authMessage('Cuenta creada. Sesión iniciada.','ok');}else{authMessage('Cuenta creada. Revisa tu correo para confirmar el email y después inicia sesión.','ok');}
+});
+$('signinBtn').addEventListener('click',async()=>{
+ const email=$('authEmail').value.trim(); const password=$('authPassword').value;
+ if(!email||!password){authMessage('Escribe tu email y contraseña.','bad');return;}
+ setAuthBusy(true); authMessage('Iniciando sesión…');
+ const {error}=await supa.auth.signInWithPassword({email,password});
+ setAuthBusy(false);
+ if(error){authMessage(error.message,'bad');return;}
+ authMessage('Sesión iniciada.','ok'); $('authPassword').value='';
+});
+$('signoutBtn').addEventListener('click',async()=>{
+ $('signoutBtn').disabled=true; $('saveNote').textContent='Terminando de guardar…';
+ try{await saveQueue;}catch(e){}
+ const {error}=await supa.auth.signOut();
+ $('signoutBtn').disabled=false;
+ if(error)authMessage(error.message,'bad');
+});
+$('authPassword').addEventListener('keydown',e=>{if(e.key==='Enter')$('signinBtn').click();});
+
+supa.auth.onAuthStateChange((_event,session)=>{setTimeout(()=>applySession(session),0);});
+(async()=>{const {data:{session}}=await supa.auth.getSession(); await applySession(session);})();
+})();
+</script>
+</body>
+</html>
